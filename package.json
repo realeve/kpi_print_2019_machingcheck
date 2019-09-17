@@ -1,0 +1,62 @@
+{
+  "private": true,
+  "scripts": {
+    "start": "umi dev",
+    "build": "umi build",
+    "test": "umi test | coveralls",
+    "lint:es": "eslint --ext .js src mock tests",
+    "lint:ts": "tslint \"src/**/*.ts\" \"src/**/*.tsx\""
+  },
+  "dependencies": {
+    "@babel/preset-env": "^7.4.5",
+    "@types/qs": "^6.5.3",
+    "antd-mobile": "^2.2.11",
+    "axios": "^0.18.0",
+    "dayjs": "^1.8.12",
+    "dva": "^2.4.1",
+    "element-resize-event": "^3.0.3",
+    "fastclick": "^1.0.6",
+    "keyboardjs": "^2.5.1",
+    "prop-types": "^15.7.2",
+    "qs": "^6.7.0",
+    "ramda": "^0.26.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-sticky": "^6.0.3",
+    "react-use": "^11.3.2",
+    "rebound": "^0.1.0",
+    "uuid": "^3.3.2",
+    "weixin-js-sdk": "^1.4.0-test"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.3.12",
+    "@types/ramda": "^0.26.6",
+    "@types/react": "^16.7.18",
+    "@types/react-dom": "^16.0.11",
+    "@types/react-test-renderer": "^16.0.3",
+    "babel-eslint": "^9.0.0",
+    "babel-jest": "^24.7.1",
+    "coveralls": "^3.0.3",
+    "eslint": "^5.4.0",
+    "eslint-config-umi": "^1.4.0",
+    "eslint-plugin-flowtype": "^2.50.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.11.1",
+    "eslint-plugin-react-hooks": "^1.6.0",
+    "husky": "^0.14.3",
+    "jest": "^24.7.1",
+    "lint-staged": "^7.2.2",
+    "react-test-renderer": "^16.7.0",
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.12.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "tslint-react": "^3.6.0",
+    "umi": "^2.8.3",
+    "umi-plugin-react": "^1.6.0",
+    "umi-types": "^0.2.0"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  }
+}

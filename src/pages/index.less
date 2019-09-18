@@ -1,3 +1,29 @@
 .content {
   margin: 0 0 20px 0;
 }
+
+.scoreItem {
+  :global {
+    .am-list {
+      &-line {
+        display: flex;
+      }
+      &-content {
+        span {
+          flex: 1;
+        }
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+  &:first-child {
+    :global {
+      .am-list {
+        &-content {
+          font-size: 10px;
+        }
+      }
+    }
+  }
+}

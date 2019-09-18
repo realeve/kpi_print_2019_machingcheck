@@ -22,9 +22,11 @@
     "ramda": "^0.26.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-sortablejs": "^1.5.1",
     "react-sticky": "^6.0.3",
     "react-use": "^11.3.2",
     "rebound": "^0.1.0",
+    "sortablejs": "^1.10.0",
     "uuid": "^3.3.2",
     "weixin-js-sdk": "^1.4.0-test"
   },

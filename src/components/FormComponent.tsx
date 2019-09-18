@@ -56,6 +56,7 @@ export default function FormComponent({
         return (
           <InputItem
             {...rest}
+            clear
             onChange={val => {
               let nextState: string[] = R.clone(state);
               nextState[idx] = val;

@@ -1,6 +1,7 @@
 import { setStore } from '@/utils/lib';
 import weixin from '@/utils/WeiXin';
 import * as users from '@/utils/user';
+import router from 'umi/router';
 
 const namespace = 'common';
 export default {
@@ -54,13 +55,16 @@ export default {
         // if (!['/result', '/export', '/chart', '/log', '/paper', '/new'].includes(pathname)) {
         //   await weixin.init();
         // }
-
-        if (['/new'].includes(pathname)) {
-          let paper = users.getPaperData();
-          await dispatch({
+        if (!['/index', '/score'].includes(pathname)) {
+          let res = users.loadLoginfo();
+          if (!res.provider) {
+            router.push('/');
+            return;
+          }
+          dispatch({
             type: 'setStore',
             payload: {
-              paper,
+              logInfo: res,
             },
           });
         }

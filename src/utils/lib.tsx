@@ -94,6 +94,7 @@ export const handleMultipleChange = (
 
 export const now = () => dayjs().format('YYYY-MM-DD HH:mm:ss');
 export const ymd = () => dayjs().format('YYYYMMDD');
+export const ym = () => dayjs().format('YYYY年MM月');
 
 interface Store {
   payload: any;

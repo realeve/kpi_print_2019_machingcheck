@@ -55,9 +55,9 @@ export default {
         // if (!['/result', '/export', '/chart', '/log', '/paper', '/new'].includes(pathname)) {
         //   await weixin.init();
         // }
-        if (!['/index', '/score'].includes(pathname)) {
+        if (!['/index', '/score', '/userscore'].includes(pathname)) {
           let res = users.loadLoginfo();
-          if (!res.provider) {
+          if (!res.provider && pathname !== '/') {
             router.push('/');
             return;
           }

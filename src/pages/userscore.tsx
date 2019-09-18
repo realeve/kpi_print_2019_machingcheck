@@ -42,7 +42,7 @@ const handleUserScore = (res, avgRes) => {
       return detail;
     });
     item.sort((b, a) => a.distScore - b.distScore);
-    avgList[name] = [{}, ...item];
+    avgList[name] = item;
   });
 
   return Object.entries(avgList).map(item => ({
@@ -54,15 +54,34 @@ const handleUserScore = (res, avgRes) => {
 function ScorePage({ logInfo, dispatch }) {
   const [userInfo, setUserinfo] = useState([]);
 
+  const [notShow, setNotShow] = useState(null);
+
   useEffect(() => {
     init();
   }, []);
 
   const init = async () => {
-    let res = await db.getCbpcPerformancePrintMcEachotherLog();
+    let myself = await db.getCbpcPerformancePrintMcEachotherLog();
     let avgRes = await db.getCbpcPerformancePrintMcEachotherAvg();
-    const userInfo = handleUserScore(res, avgRes);
-    setUserinfo(userInfo);
+    const userInfo = handleUserScore(myself, avgRes);
+    if (userInfo.length < 4) {
+      setNotShow('当前投票数不足4位，暂时不予显示，请稍后再查看。');
+      return;
+    }
+
+    let users = userInfo.map(item => item.value);
+    let res = R.flatten(users);
+    res = res.sort((a, b) => b.distScore - a.distScore);
+    let arr = [];
+    if (res.length > 0) {
+      if (res.length === 3) {
+        arr = [{}, ...res];
+      } else {
+        arr = [{}, res[0], res[1], res[2], R.last(res)];
+      }
+    }
+
+    setUserinfo(arr);
   };
 
   return (
@@ -70,46 +89,45 @@ function ScorePage({ logInfo, dispatch }) {
       <h3 style={{ textAlign: 'center' }}>{lib.ym()}机检互评得分结果</h3>
       <WingBlank>说明：自评排名与互评排名每差1名，得分扣0.2分</WingBlank>
       <WhiteSpace size="lg" />
+      <WingBlank> {notShow}</WingBlank>
 
-      {userInfo.map(item => (
-        <List key={item.name} renderHeader={() => item.name}>
-          {item.value.map((user, idx) =>
-            idx === 0 ? (
-              <Item className={styles.scoreItem} key="表头">
-                <span>姓名</span>
-                <span>
-                  互评
-                  <br />
-                  得分
-                </span>
-                <span>
-                  互评
-                  <br />
-                  排名
-                </span>
-                <span>
-                  自评
-                  <br />
-                  排名
-                </span>
-                <span>
-                  最终
-                  <br />
-                  得分
-                </span>
-              </Item>
-            ) : (
-              <Item key={user.username} className={styles.scoreItem}>
-                <span>{user.username}</span>
-                <span>{user.score}</span>
-                <span>{user.order}</span>
-                <span>{user.orderId}</span>
-                <span>{user.distScore}</span>
-              </Item>
-            ),
-          )}
-        </List>
-      ))}
+      <List renderHeader={() => '排名排名（前3名及最后一名）'}>
+        {userInfo.map((user, idx) =>
+          idx === 0 ? (
+            <Item className={styles.scoreItem} key="表头">
+              <span>姓名</span>
+              <span>
+                互评
+                <br />
+                得分
+              </span>
+              <span>
+                互评
+                <br />
+                排名
+              </span>
+              <span>
+                自评
+                <br />
+                排名
+              </span>
+              <span>
+                最终
+                <br />
+                得分
+              </span>
+            </Item>
+          ) : (
+            <Item key={user.username} className={styles.scoreItem}>
+              <span>{user.username}</span>
+              <span>{user.score}</span>
+              <span>{user.order}</span>
+              <span>{user.orderId}</span>
+              <span>{user.distScore}</span>
+            </Item>
+          ),
+        )}
+      </List>
       <WhiteSpace size="lg" />
     </div>
   );

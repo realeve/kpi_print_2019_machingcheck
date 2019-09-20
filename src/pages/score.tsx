@@ -91,7 +91,7 @@ function ScorePage({ logInfo, dispatch }) {
     setUserinfo(userInfo);
 
     let custom = await db.getCbpcPerformancePrintMachinecheck().then(res => res.data);
-    setCustomScore(custom);
+    setCustomScore([{}, ...custom]);
 
     let total = handleTotalScore(userInfo, custom);
     setTotalScore(total);

@@ -136,6 +136,7 @@ function ScorePage({ logInfo, dispatch }) {
                 <span>{user.score.toFixed(2)}</span>
                 <span>{user.order}</span>
                 <span>{user.orderId}</span>
+                <span>{user.distScore.toFixed(2)}</span>
                 <span>{((user.distScore * 5) / 3).toFixed(2)}</span>
               </Item>
             ),

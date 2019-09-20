@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, WhiteSpace, WingBlank, Toast, List } from 'antd-mobile';
+import { WhiteSpace, WingBlank, List } from 'antd-mobile';
 import * as R from 'ramda';
 import styles from './index.less';
 import { connect } from 'dva';
@@ -67,7 +67,6 @@ function ScorePage({ logInfo, dispatch }) {
 
     let users = userInfo.map(item => item.value);
     let res = R.flatten(users);
-    console.log(res);
     if (res.length < 4) {
       setNotShow('当前投票数不足4位，暂时不予显示，请稍后再查看。');
       return;

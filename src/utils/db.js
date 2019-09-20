@@ -68,3 +68,12 @@ export const getCbpcPerformancePrintMcEachotherAvg = () =>
   axios({
     url: '/210/dbb8db602a.json',
   });
+
+/**
+ *   @database: { 微信开发 }
+ *   @desc:     { 机检客户评价评分 }
+ */
+export const getCbpcPerformancePrintMachinecheck = () =>
+  axios({
+    url: '/211/22bdfd623f.json',
+  });

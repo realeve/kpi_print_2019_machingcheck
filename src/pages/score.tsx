@@ -95,16 +95,16 @@ function ScorePage({ logInfo, dispatch }) {
                 <span>
                   最终
                   <br />
-                  得分
+                  得分(10分制)
                 </span>
               </Item>
             ) : (
               <Item key={user.username} className={styles.scoreItem}>
                 <span>{user.username}</span>
-                <span>{user.score}</span>
+                <span>{user.score.toFixed(2)}</span>
                 <span>{user.order}</span>
                 <span>{user.orderId}</span>
-                <span>{user.distScore}</span>
+                <span>{((user.distScore * 5) / 3).toFixed(2)}</span>
               </Item>
             ),
           )}

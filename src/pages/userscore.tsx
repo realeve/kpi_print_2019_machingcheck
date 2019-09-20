@@ -64,13 +64,14 @@ function ScorePage({ logInfo, dispatch }) {
     let myself = await db.getCbpcPerformancePrintMcEachotherLog();
     let avgRes = await db.getCbpcPerformancePrintMcEachotherAvg();
     const userInfo = handleUserScore(myself, avgRes);
-    if (userInfo.length < 4) {
-      setNotShow('当前投票数不足4位，暂时不予显示，请稍后再查看。');
-      return;
-    }
 
     let users = userInfo.map(item => item.value);
     let res = R.flatten(users);
+    console.log(res);
+    if (res.length < 4) {
+      setNotShow('当前投票数不足4位，暂时不予显示，请稍后再查看。');
+      return;
+    }
     res = res.sort((a, b) => b.distScore - a.distScore);
     let arr = [];
     if (res.length > 0) {
@@ -114,16 +115,16 @@ function ScorePage({ logInfo, dispatch }) {
               <span>
                 最终
                 <br />
-                得分
+                得分(10分制)
               </span>
             </Item>
           ) : (
             <Item key={user.username} className={styles.scoreItem}>
               <span>{user.username}</span>
-              <span>{user.score}</span>
+              <span>{user.score.toFixed(2)}</span>
               <span>{user.order}</span>
               <span>{user.orderId}</span>
-              <span>{user.distScore}</span>
+              <span>{((user.distScore * 5) / 3).toFixed(2)}</span>
             </Item>
           ),
         )}

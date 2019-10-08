@@ -13,6 +13,12 @@ let groupList = {
   20: '检封机检组',
 };
 
+let fixedArr = {
+  user3: [9.8, 9.4, 9.0],
+  user4: [9.9, 9.5, 9.1, 8.6],
+  user5: [10, 9.6, 9.3, 8.7, 8.5],
+};
+
 const handleUserScore = (res, avgRes) => {
   avgRes.data = avgRes.data.map(item => {
     item.score = Number(item.score);
@@ -42,6 +48,12 @@ const handleUserScore = (res, avgRes) => {
       return detail;
     });
     item.sort((b, a) => a.distScore - b.distScore);
+    let fixArrItem =
+      item.length === 3 ? fixedArr.user3 : item.length === 4 ? fixedArr.user4 : fixedArr.user5;
+    item = item.map((detail, idx) => {
+      detail.fixScore = fixArrItem[idx];
+      return detail;
+    });
     avgList[name] = [{}, ...item];
   });
 
@@ -61,7 +73,8 @@ const handleTotalScore = (userInfo, customScore) => {
     let username = item.username;
     let customInfo = R.find(u => u.username === username)(customScore);
     let custom = (customInfo && customInfo.customer) || 0;
-    let each = (item.distScore * 5) / 3;
+    // let each = (item.distScore * 5) / 3;
+    let each = item.fixScore;
     let total = custom * 0.6 + each * 0.4;
     res.push({
       username,
@@ -125,6 +138,11 @@ function ScorePage({ logInfo, dispatch }) {
                   排名
                 </span>
                 <span>
+                  自评
+                  <br />
+                  得分
+                </span>
+                <span>
                   最终
                   <br />
                   得分(10分制)
@@ -137,7 +155,8 @@ function ScorePage({ logInfo, dispatch }) {
                 <span>{user.order}</span>
                 <span>{user.orderId}</span>
                 <span>{user.distScore.toFixed(2)}</span>
-                <span>{((user.distScore * 5) / 3).toFixed(2)}</span>
+                <span>{user.fixScore}</span>
+                {/* <span>{((user.distScore * 5) / 3).toFixed(2)}</span> */}
               </Item>
             ),
           )}

@@ -12,6 +12,11 @@ let groupList = {
   19: '印码机检组',
   20: '检封机检组',
 };
+let fixedArr = {
+  user3: [9.8, 9.4, 9.0],
+  user4: [9.9, 9.5, 9.1, 8.6],
+  user5: [10, 9.6, 9.3, 8.7, 8.5],
+};
 
 const handleUserScore = (res, avgRes) => {
   avgRes.data = avgRes.data.map(item => {
@@ -42,6 +47,13 @@ const handleUserScore = (res, avgRes) => {
       return detail;
     });
     item.sort((b, a) => a.distScore - b.distScore);
+
+    let fixArrItem =
+      item.length === 3 ? fixedArr.user3 : item.length === 4 ? fixedArr.user4 : fixedArr.user5;
+    item = item.map((detail, idx) => {
+      detail.fixScore = fixArrItem[idx];
+      return detail;
+    });
     avgList[name] = item;
   });
 
@@ -67,19 +79,19 @@ function ScorePage({ logInfo, dispatch }) {
 
     let users = userInfo.map(item => item.value);
     let res = R.flatten(users);
-    if (res.length < 4) {
-      setNotShow('当前投票数不足4位，暂时不予显示，请稍后再查看。');
-      return;
-    }
-    res = res.sort((a, b) => b.distScore - a.distScore);
-    let arr = [];
-    if (res.length > 0) {
-      if (res.length === 3) {
-        arr = [{}, ...res];
-      } else {
-        arr = [{}, res[0], res[1], res[2], R.last(res)];
-      }
-    }
+    // if (res.length < 4) {
+    //   setNotShow('当前投票数不足4位，暂时不予显示，请稍后再查看。');
+    //   return;
+    // }
+    res = res.sort((a, b) => b.fixScore - a.fixScore);
+    let arr = [{}, ...res.slice(0, 6)];
+    // if (res.length > 0) {
+    //   if (res.length === 3) {
+    //     arr = [{}, ...res];
+    //   } else {
+    //     arr = [{}, res[0], res[1], res[2], R.last(res)];
+    //   }
+    // }
 
     setUserinfo(arr);
   };
@@ -91,16 +103,16 @@ function ScorePage({ logInfo, dispatch }) {
       <WhiteSpace size="lg" />
       <WingBlank> {notShow}</WingBlank>
 
-      <List renderHeader={() => '排名排名（前3名及最后一名）'}>
+      <List renderHeader={() => '排名排名（前6名）'}>
         {userInfo.map((user, idx) =>
           idx === 0 ? (
             <Item className={styles.scoreItem} key="表头">
               <span>姓名</span>
-              <span>
+              {/* <span>
                 互评
                 <br />
                 得分
-              </span>
+              </span> */}
               <span>
                 互评
                 <br />
@@ -114,16 +126,17 @@ function ScorePage({ logInfo, dispatch }) {
               <span>
                 最终
                 <br />
-                得分(10分制)
+                得分
               </span>
             </Item>
           ) : (
             <Item key={user.username} className={styles.scoreItem}>
               <span>{user.username}</span>
-              <span>{user.score.toFixed(2)}</span>
+              {/* <span>{user.score.toFixed(2)}</span> */}
               <span>{user.order}</span>
               <span>{user.orderId}</span>
-              <span>{((user.distScore * 5) / 3).toFixed(2)}</span>
+              <span>{user.fixScore}</span>
+              {/* <span>{((user.distScore * 5) / 3).toFixed(2)}</span> */}
             </Item>
           ),
         )}

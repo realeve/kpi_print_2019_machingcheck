@@ -77,3 +77,21 @@ export const getCbpcPerformancePrintMachinecheck = () =>
   axios({
     url: '/211/22bdfd623f.json',
   });
+
+/**
+ *   @database: { 微信开发 }
+ *   @desc:     { 印管部人员互评得分明细 }
+ */
+export const getCbpcPerformancePrint = () =>
+  axios({
+    url: '/213/c5378eeaf5.json',
+  }).then(res => [[], ...res.data]);
+
+/**
+ *   @database: { 微信开发 }
+ *   @desc:     { 印管部人员互评最终得分 }
+ */
+export const getCbpcPerformancePrintDist = () =>
+  axios({
+    url: '/214/41bbca2bdd.json',
+  }).then(res => [[], ...res.data]);

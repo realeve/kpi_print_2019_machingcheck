@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Button, WhiteSpace, WingBlank, Toast, List } from 'antd-mobile';
+import { WhiteSpace, WingBlank, List } from 'antd-mobile';
 import * as R from 'ramda';
 import styles from './index.less';
 import { connect } from 'dva';
 import * as db from '@/utils/db.js';
 import * as lib from '@/utils/lib';
+import { StickyContainer, Sticky } from 'react-sticky';
 const Item = List.Item;
 
 let groupList = {
@@ -97,9 +98,19 @@ function ScorePage({ logInfo, dispatch }) {
     init();
   }, []);
 
+  const [printDetail, setPrintDetail] = useState([]);
+  const [printScore, setPrintScore] = useState([]);
+
   const init = async () => {
     let res = await db.getCbpcPerformancePrintMcEachotherLog();
     let avgRes = await db.getCbpcPerformancePrintMcEachotherAvg();
+
+    let detail = await db.getCbpcPerformancePrint();
+    setPrintDetail(detail);
+
+    let print = await db.getCbpcPerformancePrintDist();
+    setPrintScore(print);
+
     const userInfo = handleUserScore(res, avgRes);
     setUserinfo(userInfo);
 
@@ -112,7 +123,7 @@ function ScorePage({ logInfo, dispatch }) {
 
   return (
     <div className={styles.content}>
-      <h3 style={{ textAlign: 'center' }}>表1/3:{lib.ym()}机检互评得分结果</h3>
+      <h3 style={{ textAlign: 'center' }}>表1/5:{lib.ym()}机检互评得分结果</h3>
       <WingBlank>说明：自评排名与互评排名每差1名，得分扣0.2分</WingBlank>
       <WhiteSpace size="lg" />
 
@@ -120,7 +131,7 @@ function ScorePage({ logInfo, dispatch }) {
         <List key={item.name} renderHeader={() => item.name}>
           {item.value.map((user, idx) =>
             idx === 0 ? (
-              <Item className={styles.scoreItem} key="表头">
+              <Item className={styles.scoreItem} key="表头1">
                 <span>姓名</span>
                 <span>
                   互评
@@ -164,75 +175,163 @@ function ScorePage({ logInfo, dispatch }) {
       ))}
       <WhiteSpace size="lg" />
 
-      <h3 style={{ textAlign: 'center' }}>表2/3:机检客户评价得分结果</h3>
+      <h3 style={{ textAlign: 'center' }}>表2/5:机检客户评价得分结果</h3>
 
       <List>
-        {customScore.map((user, idx) =>
-          idx === 0 ? (
-            <Item className={styles.scoreItem} key="表头">
-              <span>姓名</span>
-              <span>
-                客户
-                <br />
-                评价
-              </span>
-              <span>
-                服务
-                <br />
-                态度
-              </span>
-              <span>
-                响应
-                <br />
-                时间
-              </span>
-              <span>
-                业务
-                <br />
-                能力
-              </span>
-              <span>票数</span>
-            </Item>
-          ) : (
-            <Item key={user.username} className={styles.scoreItem}>
-              <span>{user.username}</span>
-              <span>{user.customer}</span>
-              <span>{user.attitude}</span>
-              <span>{user.response}</span>
-              <span>{user.power}</span>
-              <span>{user.voteNum}</span>
-            </Item>
-          ),
-        )}
+        <StickyContainer>
+          {customScore.map((user, idx) =>
+            idx === 0 ? (
+              <Sticky topOffset={80} key="表头2">
+                {props => (
+                  <Item className={styles.scoreItem} style={{ ...props.style, zIndex: 1 }}>
+                    <span>姓名</span>
+                    <span>
+                      客户
+                      <br />
+                      评价
+                    </span>
+                    <span>
+                      服务
+                      <br />
+                      态度 <br />
+                      (25%)
+                    </span>
+                    <span>
+                      响应
+                      <br />
+                      时间 <br />
+                      (25%)
+                    </span>
+                    <span>
+                      业务
+                      <br />
+                      能力 <br />
+                      (50%)
+                    </span>
+                    <span>票数</span>
+                  </Item>
+                )}
+              </Sticky>
+            ) : (
+              <Item key={user.username} className={styles.scoreItem}>
+                <span>{user.username}</span>
+                <span>{user.customer}</span>
+                <span>{user.attitude}</span>
+                <span>{user.response}</span>
+                <span>{user.power}</span>
+                <span>{user.voteNum}</span>
+              </Item>
+            ),
+          )}
+        </StickyContainer>
       </List>
 
-      <h3 style={{ textAlign: 'center' }}>表3/3:机检评价月度得分</h3>
+      <h3 style={{ textAlign: 'center', color: '#e23' }}>表3/5:机检评价月度得分</h3>
       <List>
-        {totalScore.map((user, idx) =>
-          idx === 0 ? (
-            <Item className={styles.scoreItem} key="表头">
-              <span>姓名</span>
-              <span>
-                客户
-                <br />
-                评价(60%)
-              </span>
-              <span>
-                机检
-                <br />
-                自评(40%)
-              </span>
-              <span>总分</span>
-            </Item>
-          ) : (
-            <Item key={user.username} className={styles.scoreItem}>
-              <span>{user.username}</span>
-              <span>{user.custom}</span>
-              <span>{user.each}</span>
-              <span>{user.total}</span>
-            </Item>
-          ),
-        )}
+        <StickyContainer>
+          {totalScore.map((user, idx) =>
+            idx === 0 ? (
+              <Sticky topOffset={80} key="表头3">
+                {props => (
+                  <Item className={styles.scoreItem} style={{ ...props.style, zIndex: 1 }}>
+                    <span>姓名</span>
+                    <span>
+                      客户
+                      <br />
+                      评价(60%)
+                    </span>
+                    <span>
+                      机检
+                      <br />
+                      自评(40%)
+                    </span>
+                    <span>总分</span>
+                  </Item>
+                )}
+              </Sticky>
+            ) : (
+              <Item key={user.username} className={styles.scoreItem}>
+                <span>{user.username}</span>
+                <span>{user.custom}</span>
+                <span>{user.each}</span>
+                <span>{user.total}</span>
+              </Item>
+            ),
+          )}
+        </StickyContainer>
+      </List>
+
+      <h3 style={{ textAlign: 'center', color: '#e23' }}>表4/5:管理人员互评最终得分</h3>
+      <List>
+        <StickyContainer>
+          {printScore.map((user, idx) =>
+            idx === 0 ? (
+              <Sticky topOffset={80} key="表头4">
+                {props => (
+                  <Item className={styles.scoreItem} style={{ ...props.style, zIndex: 1 }}>
+                    <span>姓名</span>
+                    <span>领导(70%)</span>
+                    <span>互评(30%)</span>
+                    <span>总分</span>
+                  </Item>
+                )}
+              </Sticky>
+            ) : (
+              <Item key={user.username} className={styles.scoreItem}>
+                <span>{user.username}</span>
+                <span>{user.leader}</span>
+                <span>{user.other}</span>
+                <span>{user.total}</span>
+              </Item>
+            ),
+          )}
+        </StickyContainer>
+      </List>
+      <h3 style={{ textAlign: 'center' }}>表5/5:管理人员互评明细</h3>
+      <List>
+        <StickyContainer>
+          {printDetail.map((user, idx) =>
+            idx === 0 ? (
+              <Sticky topOffset={80} key="表头5">
+                {props => (
+                  <Item className={styles.scoreItem} style={{ ...props.style, zIndex: 1 }}>
+                    <span>姓名</span>
+                    <span>
+                      评价
+                      <br />
+                      类型
+                    </span>
+                    <span>
+                      较<br />差
+                    </span>
+                    <span>
+                      较<br />好
+                    </span>
+                    <span>
+                      良<br />好
+                    </span>
+                    <span>
+                      优<br />秀
+                    </span>
+                    <span>
+                      票<br />数
+                    </span>
+                  </Item>
+                )}
+              </Sticky>
+            ) : (
+              <Item key={idx} className={styles.scoreItem}>
+                <span>{user.username}</span>
+                <span>{user.scoreType}</span>
+                <span>{user.score5}</span>
+                <span>{user.score7}</span>
+                <span>{user.score8}</span>
+                <span>{user.score10}</span>
+                <span>{user.count}</span>
+              </Item>
+            ),
+          )}
+        </StickyContainer>
       </List>
       <WhiteSpace size="lg" />
     </div>

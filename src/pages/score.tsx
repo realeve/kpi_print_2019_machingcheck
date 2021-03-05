@@ -41,11 +41,13 @@ const handleUserScore = (res, avgRes) => {
     let item = R.prop(name, avgList);
     item = item.map((detail, idx) => {
       let scoreByMyself = R.find(R.propEq('username', detail.username))(res.data);
-      detail.selfOrder = R.isNil(scoreByMyself) ? '未评分' : Number(scoreByMyself.orderId);
+      const emptyScore = R.isNil(scoreByMyself);
+      detail.selfOrder = emptyScore ? '未评分' : Number(scoreByMyself.orderId);
       detail.orderId = (scoreByMyself && scoreByMyself.orderId) || '未评分';
-      detail.distScore = R.isNil(scoreByMyself)
-        ? detail.score
+      detail.distScore = emptyScore
+        ? 0
         : detail.score - Math.abs(Number(scoreByMyself.orderId) - detail.order) * 0.2;
+
       return detail;
     });
     item.sort((b, a) => a.distScore - b.distScore);
